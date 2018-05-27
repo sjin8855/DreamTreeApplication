@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
 public class Menu extends AppCompatActivity {
 
     @Override
@@ -47,7 +49,19 @@ public class Menu extends AppCompatActivity {
 
     public void onSettingButtonClicked(View v)
     {
+        StoreManager sm = new StoreManager();
+        List<Store> storeList =  sm.getStoreinfo();
+        for(int i = 0; i<storeList.size();i++)
+        {
+            System.out.println("na: " + storeList.get(i).get_Name());
+        }
         Intent intent = new Intent(getApplicationContext(),Setting.class);
+        startActivity(intent);
+    }
+
+    public void onLoginButtonClicked(View v)
+    {
+        Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }
 }

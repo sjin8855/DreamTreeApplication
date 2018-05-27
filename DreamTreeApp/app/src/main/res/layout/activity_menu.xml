@@ -5,10 +5,21 @@
     android:orientation="vertical"
     android:weightSum="12">
 
+    <Button
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:id = "@+id/LoginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onLoginButtonClicked"
+        android:text="로그인"
+        android:layout_gravity="right"
+        android:background="#ff7711"/>
     <TextView
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
     <LinearLayout
         android:layout_weight="4"
@@ -25,7 +36,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="40dp"
-            android:onClick="onMapButtonClicked"/>
+            android:onClick="onMapButtonClicked"
+            android:background="#ff6666ff"/>
         <Button
             android:layout_weight="5"
             android:id = "@+id/BudgetButton"
@@ -35,7 +47,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="40dp"
-            android:onClick="onBudgetButtonClicked"/>
+            android:onClick="onBudgetButtonClicked"
+            android:background="#ff6666"/>
     </LinearLayout>
 
     <LinearLayout
@@ -52,7 +65,8 @@
             android:text = "업데이트 준비중"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:background="#ff6666"/>
         <Button
             android:layout_weight="5"
             android:id = "@+id/SettingButton"
@@ -62,7 +76,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="40dp"
-            android:onClick="onSettingButtonClicked"/></LinearLayout>
+            android:onClick="onSettingButtonClicked"
+            android:background="#ff6666ff"/></LinearLayout>
 
     <TextView
         android:layout_weight="2"
