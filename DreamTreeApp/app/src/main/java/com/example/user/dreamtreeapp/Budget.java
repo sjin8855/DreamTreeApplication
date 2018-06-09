@@ -9,13 +9,28 @@ import android.widget.TextView;
 
 public class Budget extends AppCompatActivity {
 
-    TextView textResult;
+    TextView DateText;
+    TextView Foodtext;
+    TextView SpendMoneytext;
+    TextView memoText;
+
+
+    String year;
+    String month;
+    String dayOfMonth;
+    String spendMoney;
+    String category;
+    String memo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
-        textResult = (TextView) findViewById(R.id.Foodtext);
+        DateText = (TextView) findViewById(R.id.DateText);
+        Foodtext = (TextView) findViewById(R.id.Foodtext);
+        SpendMoneytext = (TextView) findViewById(R.id.SpendMoneytext);
+        memoText = (TextView) findViewById(R.id.memoText);
     }
 
     public void onInputBudgetButtonClicked(View v)
@@ -31,7 +46,17 @@ public class Budget extends AppCompatActivity {
             if(resultCode == RESULT_OK)
             {
                 String result = data.getStringExtra("result");
-                textResult.setText(result);
+                year = data.getStringExtra("year");
+                month = data.getStringExtra("month");
+                dayOfMonth = data.getStringExtra("day");
+                spendMoney = data.getStringExtra("spendMoney");
+                category = data.getStringExtra("category");
+                memo = data.getStringExtra("memo");
+
+                DateText.setText(year + "." + month + "." + dayOfMonth);
+                Foodtext.setText(category);
+                SpendMoneytext.setText(spendMoney);
+                memoText.setText(memo);
             }
         }
     }

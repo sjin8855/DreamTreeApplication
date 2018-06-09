@@ -40,7 +40,8 @@
         <activity
             android:name=".InputBudget"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".Menu"></activity>
+        <activity android:name=".Menu" />
+        <activity android:name=".CategoryList"></activity>
     </application>
 
 </manifest>
