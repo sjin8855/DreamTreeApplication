@@ -4,22 +4,27 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 
 public class JDBC extends Thread
 {
-	 Connection conn = null;
-	 Statement stmt = null;
-	 ResultSet rs = null;
+	static Connection conn = null;
+	 static Statement stmt = null;
+	 static ResultSet rs = null;
 
-	 String DB_DRV = "com.tmax.tibero.jdbc.TbDriver";
-	 String DB_IP = "localhost";
-	 String DB_PORT = "8629";
-	 String DB_SID = "tibero";
-	 String DB_ID = "HR";
-	 String DB_PWD = "tibero";
-	 String DB_URL = "jdbc:tibero:thin:@" + DB_IP + ":" + DB_PORT + ":" + DB_SID;
+	 static String DB_DRV = "com.tmax.tibero.jdbc.TbDriver";
+	 static String DB_IP = "localhost";
+	 static String DB_PORT = "8629";
+	 static String DB_SID = "tibero";
+	 static String DB_ID = "HR";
+	 static String DB_PWD = "tibero";
+	 static String DB_URL = "jdbc:tibero:thin:@" + DB_IP + ":" + DB_PORT + ":" + DB_SID;
 	 
-	 String strSQL;
+
+	 
+	 static String strSQL;
 
 	public JDBC() {
 		
@@ -55,7 +60,7 @@ public class JDBC extends Thread
 		{
 			User loginedUser = new User();
 			System.out.println(conn);
-			strSQL = "select * from DB_USERS WHERE USER_ID = " +id + "AND USER_PW = " + pw;
+			strSQL = "select * from DB_USERS WHERE USER_ID = '" +id + "'AND USER_PW = '" + pw + "'";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(strSQL);
 			System.out.println("STMT: " + stmt);
@@ -65,22 +70,24 @@ public class JDBC extends Thread
 			
 			while(rs.next())
 			{
-				System.out.println("USER Name : " + rs.getString(1));
-				System.out.println("USER BirthDay : " + rs.getString(2));
-				System.out.println("USER ID : " + rs.getString(3));
-				System.out.println("USER PW : " + rs.getString(4));
-				System.out.println("USER PhoneNumber : " + rs.getString(5));
-				System.out.println("USER Email : " + rs.getString(6));
-				System.out.println("======================");
-				loginedUser.set_Name(rs.getString(1));
-				loginedUser.set_Birthday(rs.getString(2));
-				loginedUser.set_ID(rs.getString(3));
-				loginedUser.set_PW(rs.getString(4));
-				loginedUser.set_PhoneNumber(rs.getString(5));
-				loginedUser.set_Email(rs.getString(6));
+				if(rs.getString(3).equals(id) && rs.getString(4).equals(pw))
+				{
+					System.out.println("USER Name : " + rs.getString(1));
+					System.out.println("USER BirthDay : " + rs.getString(2));
+					System.out.println("USER ID : " + rs.getString(3));
+					System.out.println("USER PW : " + rs.getString(4));
+					System.out.println("USER PhoneNumber : " + rs.getString(5));
+					System.out.println("USER Email : " + rs.getString(6));
+					System.out.println("======================");
+					loginedUser.set_Name(rs.getString(1));
+					loginedUser.set_Birthday(rs.getString(2));
+					loginedUser.set_ID(rs.getString(3));
+					loginedUser.set_PW(rs.getString(4));
+					loginedUser.set_PhoneNumber(rs.getString(5));
+					loginedUser.set_Email(rs.getString(6));
 				
-				System.out.println("로그인 성공");
-				return loginedUser;
+					return loginedUser;
+				}
 				
 			}
 			System.out.println("--------------------");
@@ -92,16 +99,87 @@ public class JDBC extends Thread
 			return null;
 		}
 	}
-	public void UserDataWrite(String id, String password, String name)
+	
+	public boolean UserDataWrite(String id, String password, String name, String birthday, String PhoneNumber, String Email)
 	{
 		try
 		{
-			strSQL = "Update";//회원가입
+		    strSQL = "select USER_ID\r\n" + 
+		                "from db_users\r\n" + 
+		                "where user_id = '" + id + "'";
+		    stmt = conn.createStatement();
+			rs = stmt.executeQuery(strSQL);
+					
+			while(rs.next())
+			{				
+				System.out.println(rs.getString(1));
+				System.out.println("이미 존재하는 아이디입니다");
+				return false;				
+			}
+		     
+		        //DB에 추가
+		    strSQL = "insert into db_users(name, birthday, user_id, user_pw, phone_number, email)\r\n" + 
+		                "values('" + name + "','" + birthday + "','" + id + "','" +  password + "','" + PhoneNumber + "','" + Email + "');";
+		    
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(strSQL);
 			System.out.println("====================");
 			System.out.println("SQL : " + strSQL);
 			System.out.println("--------------------");			
+			
+			//중복확인
+			return true;
+			
+			
+		}
+		catch(Exception ex) 
+		{
+			ex.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static synchronized void getRestaurantData()
+	{
+		try
+		{
+			Store store ;
+			List<Store> storeList = new ArrayList<Store>();
+			System.out.println(conn);
+			strSQL = "select * from DB_RESTAURANT";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(strSQL);
+			System.out.println("STMT: " + stmt);
+			System.out.println("====================");
+			System.out.println("SQL : " + strSQL);
+			System.out.println("--------------------");			
+			
+			while(rs.next())
+			{
+				store = new Store();
+				System.out.println("Store ID : " + rs.getString(1));
+				System.out.println("Borough name : " + rs.getString(2));
+				System.out.println("Store name : " + rs.getString(3));
+				System.out.println("Sectors : " + rs.getString(4));
+				//System.out.println("Address : " + rs.getString(5));
+				//System.out.println("Phone Number : " + rs.getString(6));
+				System.out.println("======================");
+				store.set_Name( rs.getString(1));
+				store.set_Sector(rs.getString(2));
+				store.set_Address(rs.getString(3));
+				store.set_PhoneNum(rs.getString(4));
+					
+				storeList.add(store);				
+			}
+			
+			for(int i = 0; i<storeList.size();i++)
+        	{
+        		System.out.println("name: " + storeList.get(i).get_Name());   
+        	}
+			ClientHandler ch;
+			ch = new ClientHandler();
+			ch.setStoreList(storeList);
+			System.out.println("--------------------");
 		}
 		catch(Exception ex) 
 		{

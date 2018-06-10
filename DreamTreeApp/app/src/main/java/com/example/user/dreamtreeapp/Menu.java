@@ -5,15 +5,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class Menu extends AppCompatActivity {
 
+    Button LoginButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        LoginButton = (Button) findViewById(R.id.LoginButton);
+        if(Login.isLogined)
+        {
+            LoginButton.setText(Login.loginedUser.get_Name());
+        }
     }
 
     @Override
@@ -43,8 +52,16 @@ public class Menu extends AppCompatActivity {
     }
     public void onBudgetButtonClicked(View v)
     {
-        Intent intent = new Intent(getApplicationContext(),Budget.class);
-        startActivity(intent);
+        if(Login.isLogined)
+        {
+            Intent intent = new Intent(getApplicationContext(), Budget.class);
+            startActivity(intent);
+        }
+        else
+        {
+            Toast toast = Toast.makeText(getApplicationContext(),"로그인부터 해주세요",Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     public void onSettingButtonClicked(View v)

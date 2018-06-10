@@ -45,10 +45,12 @@ public class Login extends AppCompatActivity {
     static String PW  = "";
     static String Name = "";
     static String Birthday = "";
+    static String PhoneNumber = "";
+    static String Email = "";
 
-    static boolean isLogined = false;
+    public static boolean isLogined = false;
 
-    static User loginedUser;
+    public static User loginedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -158,7 +160,7 @@ public class Login extends AppCompatActivity {
         {
             if(isLogined)
             {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Menu.class);
                 intent.putExtra("ID", ID);
                 intent.putExtra("PW", PW);
                 intent.putExtra("Name", Name);
@@ -228,7 +230,8 @@ public class Login extends AppCompatActivity {
             Name = splited[3].replace("LoginedUserName_", "");
             //System.out.println("LoginedUserName_: " + PW);
             Birthday = splited[4].replace("LoginedUserBirthday_","");
-
+            PhoneNumber = splited[5].replace("LoginedUserPhoneNumber_","");
+            Email = splited[6].replace("LoginedUserEmail_","");
 
             System.out.println("Login Successfully");
             if(splited[1].contains("LoginedUserID_"))
@@ -253,12 +256,24 @@ public class Login extends AppCompatActivity {
                 Birthday = splited[4].replace("LoginedUserBirthday_","");
                 System.out.println("LoginedUserBirthday_: " + Birthday);
             }
+            if(splited[5].contains("LoginedUserPhoneNumber_"))
+            {
+                PhoneNumber = splited[5].replace("LoginedUserPhoneNumber_","");
+                System.out.println("LoginedUserPhoneNumber_: " + PhoneNumber);
+            }
+            if(splited[6].contains("LoginedUserEmail_"))
+            {
+                Email = splited[6].replace("LoginedUserEmail_","");
+                System.out.println("LoginedUserEmail_: " + Email);
+            }
 
             loginedUser.set_ID(ID);
             loginedUser.set_PW(PW);
             loginedUser.set_Name(Name);
             loginedUser.set_Status(STATUS.BUSY);
             loginedUser.set_Birthday(Birthday);
+            loginedUser.set_PhoneNumber(PhoneNumber);
+            loginedUser.set_Email(Email);
 
             isLogined = true;
         }

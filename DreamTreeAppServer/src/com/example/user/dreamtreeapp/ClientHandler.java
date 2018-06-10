@@ -1,4 +1,5 @@
 package com.example.user.dreamtreeapp;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class ClientHandler extends Thread
 	
     static JDBC myDB = new JDBC();
     
+	static List<Store> storeList;
+    
 	public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos)
 	{    	
     	System.out.println("ClientHandler created");
@@ -43,6 +46,7 @@ public class ClientHandler extends Thread
 	
 	public ClientHandler()
 	{
+		
 		System.out.println("new List created");
 		checked_user = new User();
 	}
@@ -87,11 +91,10 @@ public class ClientHandler extends Thread
 	            	{
 	            		System.out.println("Received well from client");
 	            	}
-	            	else if(data.contains("StatusIs_"))
+	            	else if(data.contains("GetStoreInfo!!@@"))
 	            	{
-	            		statedata = data.split(":::");
-	            		System.out.println("SetUserStatus");
-	            		//setUserState();
+	            		System.out.println("Get Store Info Start!");
+	            		getStoreInfo();
 	            		//sendUserState();
 	            	}
 	            }
@@ -123,7 +126,7 @@ public class ClientHandler extends Thread
 					{
 						System.out.println("Current User ID: " + checked_user.get_ID());
 						System.out.println("Current User PW: " + checked_user.get_PW());
-						dos.writeUTF("LoginSuccessFull@!@!" + ":" + "LoginedUserID_" + checked_user.get_ID() + ":" + "LoginedUserPW_" + checked_user.get_PW() + ":" + "LoginedUserName_" + checked_user.get_Name() +  ":" + "LoginedUserBirthday_" + checked_user.get_Birthday());
+						dos.writeUTF("LoginSuccessFull@!@!" + ":" + "LoginedUserID_" + checked_user.get_ID() + ":" + "LoginedUserPW_" + checked_user.get_PW() + ":" + "LoginedUserName_" + checked_user.get_Name() +  ":" + "LoginedUserBirthday_" + checked_user.get_Birthday() + ":" + "LoginedUserPhoneNumber_" + checked_user.get_PhoneNumber() + ":" + "LoginedUserEmail_" + checked_user.get_Email());
 						System.out.println("logined");
 						dos.flush();
 					}
@@ -134,32 +137,15 @@ public class ClientHandler extends Thread
 					}
 				}			 			
 	        }
-	        
-	        	             
-	        public void sendLoginedUserInfoToClient() throws IOException
-	        {
-	        	
-	        	if(checked_user.get_status() == (STATUS.ONLINE))
-				{
-					dos.writeUTF("LoginSuccessFull@!@!" + ":" + "LoginedUserID_" + checked_user.get_ID() + ":" + "LoginedUserPW_" + checked_user.get_PW() + ":" + "LoginedUserName_" + checked_user.get_Name() +  ":" + "LoginedUserBirthday_" + checked_user.get_Birthday());
-					System.out.println("logined");
-					dos.flush();
-				}
-				else
-				{
-					dos.writeUTF("@#Check the ID or Password Please@#");
-		        	dos.flush();
-				}	
-	        }
-	        
-	       
+	        	       
 	        public void SignUp() throws IOException
 	        {
 	        	String SignUpID = "";
 	        	String SignUpPW = "";
 	        	String SignUpName = "";
-	        	String PartnerID = "";
-	        	JDBC myDB = new JDBC();
+	        	String SignUpBirthday = "";
+	        	String SignUpPhoneNumber = "";
+	        	String SignUpEmail = "";
 	        	if(data.contains("SignUpD_"))
 				{
 	        		String[] splited = data.split(":");
@@ -169,22 +155,50 @@ public class ClientHandler extends Thread
 					System.out.println("SignUpPW: " + SignUpPW);
 					SignUpName = splited[2].replace("SignUpName_", "");
 					System.out.println("SignUpName: " + SignUpName);
-					PartnerID = splited[3].replace("PartnerID_", "");
-					System.out.println("PartnerID: " + PartnerID);
+					SignUpBirthday = splited[3].replace("SignUpBirthday_", "");
+					System.out.println("SignUpBirthday: " + SignUpBirthday);
+					SignUpPhoneNumber = splited[4].replace("SignUpPhoneNumber_", "");
+					System.out.println("SignUpPhoneNumber: " + SignUpPhoneNumber);
+					SignUpEmail = splited[5].replace("SignUpEmail_", "");
+					System.out.println("SignUpEmail: " + SignUpEmail);					
 					
-					for(int i=0;i<list.size();i++)
+					if(myDB.UserDataWrite(SignUpID, SignUpPW, SignUpName,SignUpBirthday,SignUpPhoneNumber,SignUpEmail))
 					{
-						if(list.get(i).get_ID().equals(SignUpID))
-						{
-							System.out.println("ID Already exists");
-							dos.writeUTF("ID Already Exists!@#!@#");
-							dos.flush();
-							return;
-						}
+						System.out.println("회원가입 성공");
+						dos.writeUTF("SignUpSuccessfull@!#!@#");
+						dos.flush();
 					}
-					dos.writeUTF("SignUpSuccessfull@!#!@#");
-					dos.flush();
-					myDB.UserDataWrite(SignUpID, SignUpPW, SignUpName);
+					else
+					{
+						dos.writeUTF("ID Already Exists!@#!@#");
+						dos.flush();
+					}
+				}
+	        }
+	        public void getStoreInfo()
+	        {
+	        	System.out.println("Get Store Info function Start");
+	        	
+	        	myDB.getRestaurantData();
+	        	
+	        	System.out.println(storeList.size());
+	        	
+	        	for(int i = 0; i<storeList.size();i++)
+	        	{
+	        	//	System.out.println("name: " + storeList.get(i).get_Name() + "Borough: " + storeList.get(i).get_BoroughName());   
+	        	}
+	        	
+	        	try 
+				{
+	                oos = new ObjectOutputStream(socket.getOutputStream());	 
+					oos.writeObject(storeList);
+					oos.flush();
+					oos.close();
+				} 
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 	        }
 	        
@@ -247,7 +261,11 @@ public class ClientHandler extends Thread
 	    public void setUserList(List<User> userList)
 		{
 			list = userList;
-		}	 
+		}
+	    public void setStoreList(List<Store> _storeList)
+		{
+			storeList = _storeList;
+		}
 	    public void setUserStateList(HashMap<String, String> userState)
 		{
 	    	userStatusList = userState;
