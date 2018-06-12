@@ -43,12 +43,82 @@
             android:layout_weight="0.8"
             class="com.google.android.gms.maps.MapFragment" />
 
-        <Button
-            android:text="장소검색"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
-            android:id="@+id/button"/>
+    <Button
+        android:text="장소검색"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/button"/>
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:drawSelectorOnTop="false"
+        android:choiceMode="multipleChoice"
+        android:id="@+id/listview">
+
+    </ListView>
+
+    <Button
+        android:text="주소별 검색"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/adSearch"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/insert_name"/>
+    
+    <Button
+        android:text="이름별 검색"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/nameSearch"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1">
+
+
+        <RadioButton
+            android:id="@+id/hansic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="한식" />
+
+        <RadioButton
+            android:id="@+id/joongsic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="중식" />
+
+        <RadioButton
+            android:id="@+id/yangsic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="양식" />
+
+        <RadioButton
+            android:id="@+id/etc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="기타" />
+
+    </RadioGroup>
+
+    <Button
+        android:text="업종별 검색"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:id="@+id/sectorSearch"/>
 
 </LinearLayout>
