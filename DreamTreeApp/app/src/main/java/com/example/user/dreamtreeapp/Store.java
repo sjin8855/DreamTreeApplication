@@ -9,6 +9,7 @@ public class Store implements Serializable
     String Address;
     String PhoneNum;
     String Name;
+    String Borough;
 
     public String get_indexs()
     {
@@ -30,6 +31,9 @@ public class Store implements Serializable
     {
         return Name;
     }
+    public String get_Borough() {
+        return Borough;
+    }
 
     public void set_index(String _index)
     {
@@ -50,5 +54,10 @@ public class Store implements Serializable
     public void set_Name(String _Name)
     {
         Name = _Name;
+    }
+
+    //get , set 함수 추가하였음. - 유동관
+    public void set_Borough(String _Borough) {
+        Borough = _Borough;
     }
 }

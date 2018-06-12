@@ -118,8 +118,11 @@ public class JDBC extends Thread
 			}
 		     
 		        //DB에 추가
-		    strSQL = "insert into db_users(name, birthday, user_id, user_pw, phone_number, email)\r\n" + 
-		                "values('" + name + "','" + birthday + "','" + id + "','" +  password + "','" + PhoneNumber + "','" + Email + "');";
+		    strSQL = "insert into db_user_INFO(name, birthday, user_id, user_pw)\r\n" + 
+		                "values('" + name + "','" + birthday + "','" + id + "','" +  password+ "' );";
+	        //DB에 추가
+		    strSQL = "insert into db_user_EMAIL(phone_number, email)\r\n" + 
+	                	"values('" + PhoneNumber + "','" + Email + "');";
 		    
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(strSQL);
@@ -139,6 +142,68 @@ public class JDBC extends Thread
 		}
 	}
 	
+	public void BudgetDataRead(String id)
+	{
+		try
+		{
+			List<BudgetInfo> budgetList = new ArrayList<BudgetInfo>();
+			BudgetInfo newBudget = new BudgetInfo();
+			
+		    strSQL = "select *\r\n" + 
+		                "from db_Account_book\r\n" + 
+		                "where user_id = '" + id + "'";
+		    stmt = conn.createStatement();
+			rs = stmt.executeQuery(strSQL);		
+					
+			while(rs.next())
+			{						
+				newBudget.setUserID(rs.getString(1));
+				newBudget.setCategory(rs.getString(2));
+				newBudget.setSpendMoney(rs.getString(3));
+				newBudget.setBalance(rs.getString(4));
+				newBudget.setMemo(rs.getString(5));
+				newBudget.setDate(rs.getString(6));	
+				
+				budgetList.add(newBudget);
+			}		     			
+			
+			ClientHandler ch;
+			ch = new ClientHandler();
+			ch.setBudgetList(budgetList);
+		}
+		
+		catch(Exception ex) 
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public boolean BudgetDataWrite(String id, String storeName, String expenditure, String balance, String memo, String spendDate)
+	{
+		try
+		{		     
+			//DB에 추가
+		    strSQL = "insert into DB_ACCOUNT_BOOK(USER_ID, STORE_NAME, EXPENDITURE, BALANCE, MEMO, SPEND_DATE)\r\n" + 
+		                "values('" + id + "','" + storeName + "','" + expenditure + "','" +  balance + "','" + memo + "','" + spendDate + "');";
+		    
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(strSQL);
+			System.out.println("====================");
+			System.out.println("SQL : " + strSQL);
+			System.out.println("--------------------");			
+			
+			//중복확인
+			return true;			
+		}
+		catch(Exception ex) 
+		{
+			ex.printStackTrace();
+			return false;
+		}
+	}
+	
+	///////////////////////수정 전//////////////////////////////
+	
 	public static synchronized void getRestaurantData()
 	{
 		try
@@ -157,19 +222,22 @@ public class JDBC extends Thread
 			while(rs.next())
 			{
 				store = new Store();
-				System.out.println("Store ID : " + rs.getString(1));
-				System.out.println("Borough name : " + rs.getString(2));
-				System.out.println("Store name : " + rs.getString(3));
-				System.out.println("Sectors : " + rs.getString(4));
-				//System.out.println("Address : " + rs.getString(5));
-				//System.out.println("Phone Number : " + rs.getString(6));
+				System.out.println("Store name : " + rs.getString(1));
+				System.out.println("Sectors : " + rs.getString(2));
+				System.out.println("Address : " + rs.getString(3));
+				System.out.println("Phone Number : " + rs.getString(4));
+				//System.out.println("Store ID : " + rs.getString(1));
+				System.out.println("Borough name : " + rs.getString(5));
+
+
 				System.out.println("======================");
 				store.set_Name( rs.getString(1));
 				store.set_Sector(rs.getString(2));
 				store.set_Address(rs.getString(3));
 				store.set_PhoneNum(rs.getString(4));
+				store.set_Borough(rs.getString(5));
 					
-				storeList.add(store);				
+				storeList.add(store);
 			}
 			
 			for(int i = 0; i<storeList.size();i++)
@@ -186,5 +254,105 @@ public class JDBC extends Thread
 			ex.printStackTrace();
 		}
 	}
+	
+	
+	//////////////////////////수정 후 /////////////////////////////
+	//변경 점 : 레스토랑 디비를 정규화하여 두개로 분리함. 
+	//레스토랑 이름은 섹터와 연관성 있으므로 Bcnf 로 설정하고, 그 이외의 분해는 불필요한 분해임으로 3 정규형으로 놔둠.
+//	public static synchronized void getRestaurantInfoData()
+//	{
+//		try
+//		{
+//			Store store ;
+//			List<Store> storeList = new ArrayList<Store>();
+//			System.out.println(conn);
+//			strSQL = "select * from DB_RESTAURANT_INFO";
+//			stmt = conn.createStatement();
+//			rs = stmt.executeQuery(strSQL);
+//			System.out.println("STMT: " + stmt);
+//			System.out.println("====================");
+//			System.out.println("SQL : " + strSQL);
+//			System.out.println("--------------------");			
+//			
+//			while(rs.next())
+//			{
+//				store = new Store();
+//				System.out.println("Phone Number : " + rs.getString(1));
+//				System.out.println("Store Name : " + rs.getString(2));
+//				System.out.println("Borough Name : " + rs.getString(3));
+//				System.out.println("Address : " + rs.getString(4));
+//				//System.out.println("Address : " + rs.getString(5));
+//				//System.out.println("Phone Number : " + rs.getString(6));
+//				System.out.println("======================");
+//				store.set_PhoneNum( rs.getString(1));
+//				store.set_Name(rs.getString(2));
+//				store.set_Borough(rs.getString(3));
+//				store.set_Address(rs.getString(4));
+//					
+//				storeList.add(store);				
+//			}		
+//			
+//			for(int i = 0; i<storeList.size();i++)
+//        	{
+//        		System.out.println("name: " + storeList.get(i).get_Name());   
+//        	}
+//			ClientHandler ch;
+//			ch = new ClientHandler();
+//			ch.setStoreList(storeList);
+//			System.out.println("--------------------");
+//		}
+//		catch(Exception ex) 
+//		{
+//			ex.printStackTrace();
+//		}
+//	}
+//	
+//	public static synchronized void getRestaurantSectorData()
+//	{
+//		try
+//		{
+//			Store store ;
+//			List<Store> storeList = new ArrayList<Store>();
+//			System.out.println(conn);
+//			strSQL = "select * from DB_RESTAURANT_sectors";
+//			stmt = conn.createStatement();
+//			rs = stmt.executeQuery(strSQL);
+//			System.out.println("STMT: " + stmt);
+//			System.out.println("====================");
+//			System.out.println("SQL : " + strSQL);
+//			System.out.println("--------------------");			
+//			
+//			while(rs.next())
+//			{
+//				store = new Store();
+//				//System.out.println("Store ID : " + rs.getString(1));
+//				//System.out.println("Borough name : " + rs.getString(2));
+//				System.out.println("Store name : " + rs.getString(1));
+//				System.out.println("Sectors : " + rs.getString(2));
+//				//System.out.println("Address : " + rs.getString(5));
+//				//System.out.println("Phone Number : " + rs.getString(6));
+//				System.out.println("======================");
+//				store.set_Name( rs.getString(1));
+//				store.set_Sector(rs.getString(2));
+//				//store.set_Address(rs.getString(3));
+//				//store.set_PhoneNum(rs.getString(4));
+//					
+//				storeList.add(store);				
+//			}
+//			
+//			for(int i = 0; i<storeList.size();i++)
+//        	{
+//        		System.out.println("name: " + storeList.get(i).get_Name());   
+//        	}
+//			ClientHandler ch;
+//			ch = new ClientHandler();
+//			ch.setStoreList(storeList);
+//			System.out.println("--------------------");
+//		}
+//		catch(Exception ex) 
+//		{
+//			ex.printStackTrace();
+//		}
+//	}
 	
 }

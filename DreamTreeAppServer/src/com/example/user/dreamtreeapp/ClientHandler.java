@@ -29,9 +29,12 @@ public class ClientHandler extends Thread
 	static String data;
 	static String[] statedata;
 	
+	static String m_id;
+	
     static JDBC myDB = new JDBC();
     
 	static List<Store> storeList;
+	static List<BudgetInfo> budgetList;
     
 	public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos)
 	{    	
@@ -96,6 +99,12 @@ public class ClientHandler extends Thread
 	            		System.out.println("Get Store Info Start!");
 	            		getStoreInfo();
 	            		//sendUserState();
+	            	}
+	            	else if(data.contains("GiveMeTheBudgetData_"))
+	            	{
+	            		String[] splited = data.split(":");
+	            		m_id = splited[1];
+	            		getBudgetInfo();
 	            	}
 	            }
 	            catch (IOException ie) 
@@ -180,6 +189,8 @@ public class ClientHandler extends Thread
 	        	System.out.println("Get Store Info function Start");
 	        	
 	        	myDB.getRestaurantData();
+	        	//myDB.getRestaurantInfoData();	//수정한 부분. 
+	        	//myDB.getRestaurantSectorData(); //수정한 부분
 	        	
 	        	System.out.println(storeList.size());
 	        	
@@ -192,6 +203,26 @@ public class ClientHandler extends Thread
 				{
 	                oos = new ObjectOutputStream(socket.getOutputStream());	 
 					oos.writeObject(storeList);
+					oos.flush();
+					oos.close();
+				} 
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+	        
+	        public void getBudgetInfo()
+	        {
+	        	System.out.println("Get Budget Info function Start");
+	        	
+	        	myDB.BudgetDataRead(m_id);
+	        	
+	        	try 
+				{
+	                oos = new ObjectOutputStream(socket.getOutputStream());	 
+					oos.writeObject(budgetList);
 					oos.flush();
 					oos.close();
 				} 
@@ -270,4 +301,9 @@ public class ClientHandler extends Thread
 		{
 	    	userStatusList = userState;
 		}	 
+	    public void setBudgetList(List<BudgetInfo> _budgetList)
+		{
+	    	budgetList = _budgetList;
+		}	 
+	    
 }

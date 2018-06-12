@@ -111,11 +111,11 @@ public class Splash extends AppCompatActivity {
                 try
                 {
                     System.out.println("받ㅂ다ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅡㅡㅡㅡㅡㅡ");
-                    storeList  = new ArrayList<Store>();
-                    Oin = new ObjectInputStream(mSocket.getInputStream());
-                    storeList = (ArrayList<Store>) Oin.readObject();
-                    Oin.close();
-                }
+                storeList  = new ArrayList<Store>();
+                Oin = new ObjectInputStream(mSocket.getInputStream());
+                storeList = (ArrayList<Store>) Oin.readObject();
+                Oin.close();
+            }
                 catch (ClassNotFoundException e)
                 {
                     e.printStackTrace();
@@ -124,15 +124,16 @@ public class Splash extends AppCompatActivity {
                 System.out.println(storeList.size());
                 System.out.println("싸이즈ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 
-                /*
+
                 for(int i=0;i<storeList.size();i++)
                 {
                     String name = storeList.get(i).get_Name();
-                    String boroughName = storeList.get(i).get_BoroughName();
-
-                    System.out.println("name: " + name + " boroughName: " + boroughName);
+                    String boroughName = storeList.get(i).get_Borough();
+                    String sector = storeList.get(i).get_Sector();
+                    String address = storeList.get(i).get_Address();
+                    System.out.println("name: " + name + " boroughName: " + boroughName + " Sector: " + sector + " Address: " + address);
                 }
-                */
+
 
             } catch (IOException e) {
                 e.printStackTrace();
