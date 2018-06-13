@@ -3,46 +3,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="6">
 
-    <TextView
-        android:layout_weight="2"
-        android:id="@+id/RemainingMoney"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="잔액: 150000원"
-        android:textSize = "30dp"
-        android:layout_gravity="center"
-        android:gravity="center"/>
-    <TextView
+        android:layout_weight="1.8"
+        android:background="@drawable/gradient">
+
+        <TextView
+            android:id="@+id/RemainingMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="잔액: 150,000원"
+            android:textColor="@color/white"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1">
+
+        <Button
+            android:id="@+id/InputBudgetButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="0sp"
+            android:text = "가계부 입력하기"
+            android:textSize="16dp"
+            android:background="@color/accent_color"
+            android:onClick="onInputBudgetButtonClicked"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/AlarmText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize = "30dp"
-        android:layout_gravity="center"
-        android:gravity="center"/>
+        android:orientation="vertical"
+        android:weightSum="1">
 
-    <Button
-        android:layout_weight="0.5"
-        android:id="@+id/InputBudgetButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text = "입력하기"
-        android:layout_gravity="center"
-        android:onClick="onInputBudgetButtonClicked"/>
-
-    <TextView
-        android:layout_weight="0.5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/AlarmText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize = "40dp"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
     <LinearLayout
         android:id = "@+id/rl"
         android:layout_weight="3.5"
@@ -50,7 +68,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="10">
-
     </LinearLayout>
     </ScrollView>
 

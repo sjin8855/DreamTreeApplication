@@ -41,7 +41,10 @@
             android:name=".InputBudget"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".Menu" />
-        <activity android:name=".CategoryList"></activity>
+        <activity android:name=".CategoryList" />
+        <activity android:name=".PostList" />
+        <activity android:name=".NewPost" />
+        <activity android:name=".PostView"></activity>
     </application>
 
 </manifest>

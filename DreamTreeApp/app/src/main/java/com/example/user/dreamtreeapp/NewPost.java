@@ -3,21 +3,22 @@ package com.example.user.dreamtreeapp;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Splash extends AppCompatActivity {
+public class NewPost extends AppCompatActivity {
 
     private String ip = "61.255.4.166";//IP
     public static int SERVERPORT = 7777;
@@ -27,36 +28,48 @@ public class Splash extends AppCompatActivity {
     static DataInputStream Din;
     Socket mSocket;
 
-    static ObjectOutputStream Oout;
-    static ObjectInputStream Oin;
+    EditText ettitle,etcontent;
+    Post post1= new Post();
 
-    List<Store> storeList = null;
+    boolean writeDone = false;
 
-    StoreManager sm;
-
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_new_post);
+        ettitle = (EditText)findViewById(R.id.ettitle);
+        etcontent = (EditText)findViewById(R.id.etcontent);
 
-        sm = new StoreManager();
 
-        myAsyncTask = new MyAsyncTask();
-        myAsyncTask.execute();
+        setTitle("New Post");
 
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Intent mainIntent = new Intent(Splash.this,Menu.class);
-                Splash.this.startActivity(mainIntent);
-                Splash.this.finish();
-            }
-        }, SPLASH_DISPLAY_LENGTH);
     }
 
+    public void onClick(View v){
+        if(v.getId()==R.id.back){
+            finish();
+        }
+        else{
+            post1.setTitle(ettitle.getText().toString());
+            post1.setContent(etcontent.getText().toString());
+            post1.setDate(finddate());
+            Intent intent = getIntent();
+            intent.putExtra("result",post1);    //post를 첨부한다.
+            setResult(RESULT_OK,intent);
+
+            MyAsyncTask myAsyncTask = new MyAsyncTask();
+            myAsyncTask.execute();
+        }
+    }
+
+    public String finddate()
+    {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String fmdate = sdf.format(date);
+        return fmdate;
+    }
 
     private class MyAsyncTask extends AsyncTask<Void,Void,Void>
     {
@@ -108,32 +121,12 @@ public class Splash extends AppCompatActivity {
             String line;
             try
             {
-                try
+                line = Din.readUTF();
+                System.out.println(line);
+                if(line.contains("CommunityListUpdated__"))
                 {
-                    System.out.println("받ㅂ다ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅡㅡㅡㅡㅡㅡ");
-                storeList  = new ArrayList<Store>();
-                Oin = new ObjectInputStream(mSocket.getInputStream());
-                storeList = (ArrayList<Store>) Oin.readObject();
-                Oin.close();
-            }
-                catch (ClassNotFoundException e)
-                {
-                    e.printStackTrace();
+                    writeDone = true;
                 }
-                System.out.println("싸이즈ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-                System.out.println(storeList.size());
-                System.out.println("싸이즈ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-
-
-                for(int i=0;i<storeList.size();i++)
-                {
-                    String name = storeList.get(i).get_Name();
-                    String boroughName = storeList.get(i).get_Borough();
-                    String sector = storeList.get(i).get_Sector();
-                    String address = storeList.get(i).get_Address();
-                    System.out.println("name: " + name + " boroughName: " + boroughName + " Sector: " + sector + " Address: " + address);
-                }
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -144,15 +137,11 @@ public class Splash extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            try
+            if(writeDone)
             {
-                sm.setStoreList(storeList);
-                mSocket.close();
-                System.out.println("Socket closed");
+                Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+                finish();
 
-            } catch (IOException e)
-            {
-                e.printStackTrace();
             }
         }
     }
@@ -164,7 +153,17 @@ public class Splash extends AppCompatActivity {
         {
             try
             {
-                Dout.writeUTF("GetStoreInfo!!@@");
+                Dout.writeUTF("writePostInfo_:"
+                        + "Post!@LoginedUser:" + Login.loginedUser.get_ID()
+                        + ":Post!@Title:" + post1.getTitle().toString()
+                        + ":Post!@Content:" + post1.getContent().toString()
+                        + ":Post!@Date:" + post1.getDate().toString());
+
+                System.out.println("writePostInfo_:"
+                        + "Post!@LoginedUser:" + Login.loginedUser.get_ID()
+                        + ":Post!@Title:" + post1.getTitle().toString()
+                        + ":Post!@Content:" + post1.getContent().toString()
+                        + ":Post!@Date:" + post1.getDate().toString());
                 Dout.flush();
             }
             catch (IOException e)
@@ -177,5 +176,4 @@ public class Splash extends AppCompatActivity {
         protected void onPostExecute(Void result) {
         }
     }
-
 }

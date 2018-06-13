@@ -35,6 +35,8 @@ public class ClientHandler extends Thread
     
 	static List<Store> storeList;
 	static List<BudgetInfo> budgetList;
+	static List<Post> postList;
+	static boolean hasBudgetProblem = false;
     
 	public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos)
 	{    	
@@ -106,6 +108,23 @@ public class ClientHandler extends Thread
 	            		m_id = splited[1];
 	            		getBudgetInfo();
 	            	}
+	            	else if(data.contains("writeBudgetInfo_"))
+	            	{
+	            		String[] splited = data.split(":");
+	            		getBudgetInfoFromClient();
+	            	}
+	            	else if(data.contains("writePostInfo_"))
+	            	{
+	            		String[] splited = data.split(":");
+	            		getCommunityInfoFromClient();
+	            	}	            	
+	            	else if(data.contains("GiveMeThePostData_"))
+	            	{
+	            		String[] splited = data.split(":");
+	            		m_id = splited[1];
+	            		System.out.println("Ssss");
+	            		getCommunityInfo();
+	            	}
 	            }
 	            catch (IOException ie) 
 	            {
@@ -135,7 +154,14 @@ public class ClientHandler extends Thread
 					{
 						System.out.println("Current User ID: " + checked_user.get_ID());
 						System.out.println("Current User PW: " + checked_user.get_PW());
-						dos.writeUTF("LoginSuccessFull@!@!" + ":" + "LoginedUserID_" + checked_user.get_ID() + ":" + "LoginedUserPW_" + checked_user.get_PW() + ":" + "LoginedUserName_" + checked_user.get_Name() +  ":" + "LoginedUserBirthday_" + checked_user.get_Birthday() + ":" + "LoginedUserPhoneNumber_" + checked_user.get_PhoneNumber() + ":" + "LoginedUserEmail_" + checked_user.get_Email());
+						dos.writeUTF("LoginSuccessFull@!@!" + ":" 
+						+ "LoginedUserID_" + checked_user.get_ID() 
+						+ ":" + "LoginedUserPW_" + checked_user.get_PW() 
+						+ ":" + "LoginedUserName_" + checked_user.get_Name() 
+						+  ":" + "LoginedUserBirthday_" + checked_user.get_Birthday() 
+						+ ":" + "LoginedUserPhoneNumber_" + checked_user.get_PhoneNumber() 
+						+ ":" + "LoginedUserEmail_" + checked_user.get_Email()
+						+ ":" + "LoginedUserBalance_" + checked_user.get_RemainingMoney());
 						System.out.println("logined");
 						dos.flush();
 					}
@@ -146,7 +172,75 @@ public class ClientHandler extends Thread
 					}
 				}			 			
 	        }
-	        	       
+	        
+	        public void getBudgetInfoFromClient() throws IOException
+	        {
+	        	System.out.println("getBudgetInfoFromClient Start from handler");
+	        	//System.out.println("Current User: " + checked_user.get_Status());	        
+	        	//BudgetUserID, BudgetCategory, BudgetExpenditure, BudgetMemo, BudgetSpendDate
+	        	
+	        	String BudgetUserID = "";
+	        	String BudgetCategory = "";
+	        	String BudgetExpenditure = "";
+	        	String BudgetMemo = "";
+	        	String BudgetSpendDate = "";
+				System.out.println("data: " + data);
+				
+	        	if(data.contains("writeBudgetInfo_"))
+				{
+					String[] splited = data.split(":");
+					BudgetUserID = splited[2];
+					System.out.println("BudgetUserID: " + BudgetUserID);
+					BudgetCategory = splited[4];
+					System.out.println("BudgetCategory: " + BudgetCategory);	
+					BudgetExpenditure = splited[6];
+					System.out.println("BudgetExpenditure: " + BudgetExpenditure);
+					BudgetMemo = splited[8];
+					System.out.println("BudgetMemo: " + BudgetMemo);
+					BudgetSpendDate = splited[10];
+					System.out.println("BudgetSpendDate: " + BudgetSpendDate);
+				
+					myDB.BudgetDataWrite(BudgetUserID, BudgetCategory, BudgetExpenditure, "0", BudgetMemo, BudgetSpendDate);
+					dos.writeUTF("BudgetListUpdated__");
+					System.out.println("BudgetListUpdated");
+					dos.flush();
+					
+					return;
+				}		
+	        }
+	        public void getCommunityInfoFromClient() throws IOException
+		    {
+		        	System.out.println("getCommunityInfoFromClient Start from handler");
+		        	//System.out.println("Current User: " + checked_user.get_Status());	        
+		        	//BudgetUserID, BudgetCategory, BudgetExpenditure, BudgetMemo, BudgetSpendDate
+		        	
+		        	String CommunityUserID = "";
+		        	String CommunityTitle = "";
+		        	String CommunityContent = "";
+		        	String CommunityDate = "";
+					System.out.println("data: " + data);
+					
+		        	if(data.contains("writePostInfo_"))
+					{
+						String[] splited = data.split(":");
+						CommunityUserID = splited[2];
+						System.out.println("CommunityUserID: " + CommunityUserID);
+						CommunityTitle = splited[4];
+						System.out.println("CommunityTitle: " + CommunityTitle);	
+						CommunityContent = splited[6];
+						System.out.println("CommunityContent: " + CommunityContent);
+						CommunityDate = splited[8];
+						System.out.println("CommunityDate: " + CommunityDate);
+					
+						myDB.CommunityDataWrite(CommunityUserID, CommunityTitle, CommunityContent,CommunityDate);
+						dos.writeUTF("CommunityListUpdated__");
+						System.out.println("CommunityListUpdated__");
+						dos.flush();
+						
+						return;
+					}	
+	        }
+	        
 	        public void SignUp() throws IOException
 	        {
 	        	String SignUpID = "";
@@ -218,13 +312,26 @@ public class ClientHandler extends Thread
 	        	System.out.println("Get Budget Info function Start");
 	        	
 	        	myDB.BudgetDataRead(m_id);
-	        	
+	        		               	
 	        	try 
 				{
 	                oos = new ObjectOutputStream(socket.getOutputStream());	 
 					oos.writeObject(budgetList);
 					oos.flush();
+					
+					if(hasBudgetProblem)
+					{
+						oos.writeUTF("ThisChildIsInDanger!@!@");
+						System.out.println("ThisChildIsInDanger!@!@");
+						oos.flush();
+					}
+					for(int i=0;i<budgetList.size();i++)
+	                {
+	                    System.out.println(budgetList.get(i).getSpendMoney() + " :::::: " + budgetList.size());
+	                }
+					
 					oos.close();
+					
 				} 
 				catch (IOException e) 
 				{
@@ -232,6 +339,37 @@ public class ClientHandler extends Thread
 					e.printStackTrace();
 				}
 	        }
+	        
+	        public void getCommunityInfo()
+	        {
+	        	System.out.println("Get Budget Info function Start");
+	        	
+	        	myDB.CommunityDataRead();
+	        		               	
+	        	try 
+				{
+	                oos = new ObjectOutputStream(socket.getOutputStream());	 
+					oos.writeObject(postList);
+					oos.flush();
+					
+					/*
+					if(hasBudgetProblem)
+					{
+						oos.writeUTF("ThisChildIsInDanger!@!@");
+						System.out.println("ThisChildIsInDanger!@!@");
+						oos.flush();
+					}
+					*/
+					oos.close();
+					
+				} 
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+	        
 	        
 	        /*
 	        public void setUserState() throws IOException
@@ -305,5 +443,12 @@ public class ClientHandler extends Thread
 		{
 	    	budgetList = _budgetList;
 		}	 
-	    
+	    public void sethasBudgetProblem(boolean _hasBudgetProblem)
+	    {
+	    	hasBudgetProblem = _hasBudgetProblem;
+	    }
+	    public void setPostList(List<Post> _postList)
+	    {
+	    	postList = _postList;
+	    }
 }

@@ -9,7 +9,6 @@ public class BudgetInfo implements Serializable
     String spendMoney;
     String category;
     String memo;
-    String balance;
 
     public String getUserID()
     {
@@ -31,11 +30,6 @@ public class BudgetInfo implements Serializable
     {
         return memo;
     }
-    public String getBalance()
-    {
-        return balance;
-    }
-
     public void setUserID(String _userID)
     {
         userID = _userID;
@@ -55,9 +49,5 @@ public class BudgetInfo implements Serializable
     public void setMemo(String _memo)
     {
         memo = _memo;
-    }
-    public void setBalance(String _balance)
-    {
-        balance = _balance;
     }
 }

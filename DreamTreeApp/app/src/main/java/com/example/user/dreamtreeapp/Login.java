@@ -47,6 +47,7 @@ public class Login extends AppCompatActivity {
     static String Birthday = "";
     static String PhoneNumber = "";
     static String Email = "";
+    static int balance = 0;
 
     public static boolean isLogined = false;
 
@@ -266,6 +267,11 @@ public class Login extends AppCompatActivity {
                 Email = splited[6].replace("LoginedUserEmail_","");
                 System.out.println("LoginedUserEmail_: " + Email);
             }
+            if(splited[7].contains("LoginedUserBalance_"))
+            {
+                balance = Integer.valueOf(splited[7].replace("LoginedUserBalance_",""));
+                System.out.println("LoginedUserEmail_: " + balance);
+            }
 
             loginedUser.set_ID(ID);
             loginedUser.set_PW(PW);
@@ -274,6 +280,7 @@ public class Login extends AppCompatActivity {
             loginedUser.set_Birthday(Birthday);
             loginedUser.set_PhoneNumber(PhoneNumber);
             loginedUser.set_Email(Email);
+            loginedUser.set_RemainingMoney(balance);
 
             isLogined = true;
         }

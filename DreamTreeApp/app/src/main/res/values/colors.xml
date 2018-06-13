@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_color">#56cbda</color>
-    <color name="sub_color">#3eedbe</color>
+    <color name="main_color">#289aa9</color>
+    <color name="sub_color">#8be664</color>
     <color name="accent_color">#ffb82b</color>
     <color name="background_color">#505050</color>
     <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#000000</color>
     <color name="orange">#FFA500</color>
     <color name="none">#00000000</color>
 </resources>

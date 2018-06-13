@@ -20,6 +20,7 @@ public class User {
 	private String Birthday;
 	private String PhoneNumber;
 	private String Email;
+	private int RemainingMoney;
 	
 	private STATUS status;
 	
@@ -52,6 +53,10 @@ public class User {
 	{
 		return status;
 	}
+	public int get_RemainingMoney()
+	{
+		return RemainingMoney;
+	}
 	
 	public void set_ID(String _ID)
 	{
@@ -81,6 +86,10 @@ public class User {
 	public void set_Status(STATUS stat)
 	{
 		status = stat;
+	}
+	public void set_RemainingMoney(int _RemainingMoney)
+	{
+		RemainingMoney = _RemainingMoney;
 	}
 	
 	public void displayUserInfo()

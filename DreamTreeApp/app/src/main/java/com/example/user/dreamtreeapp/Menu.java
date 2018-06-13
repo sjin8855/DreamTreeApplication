@@ -81,4 +81,18 @@ public class Menu extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }
+
+    public void onButtonCommunityClicked(View v)
+    {
+        if(Login.isLogined)
+        {
+            Intent intent = new Intent(getApplicationContext(), PostList.class);
+            startActivity(intent);
+        }
+        else
+        {
+            Toast toast = Toast.makeText(getApplicationContext(),"로그인부터 해주세요",Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
 }

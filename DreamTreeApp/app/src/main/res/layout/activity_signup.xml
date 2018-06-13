@@ -4,192 +4,177 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="10"
+    android:background="@drawable/gradient"
     >
 
-    <Space
+    <LinearLayout
+        android:id="@+id/line1"
         android:layout_weight="4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:id = "@+id/IDLayout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="7">
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editID"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="아이디"
-            android:textColor="#000000"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:paddingLeft="16dp"/>
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:weightSum="4"
         >
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editPW"
-            android:textColor="#000000"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="비밀번호"
-            android:paddingLeft="16dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
-        >
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editName"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="이름"
-            android:textColor="#000000"
-            android:paddingLeft="16dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
-        >
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editBirthday"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:hint="생일"
-            android:paddingLeft="16dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
-        >
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editPhoneNumber"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:hint="핸드폰 번호"
-            android:paddingLeft="16dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="7"
-        >
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:layout_weight="3"
-            android:id = "@+id/editEmail"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:hint="이메일"
-            android:paddingLeft="16dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_weight="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:weightSum="10">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"/>
+            android:layout_gravity="center"
+            android:text="회원 인증"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="34dp"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id = "@+id/infoLayout"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <!--아이디 입력-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_sign_up_user"
+                android:padding="0dp"/>
+            <EditText
+                android:id = "@+id/editID"
+                android:layout_width="200dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="5dp"
+                android:hint="User ID"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+        </LinearLayout>
+
+
+        <!--비밀번호 입력-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_sign_up_pw"
+                android:padding="0dp"/>
+            <EditText
+                android:id = "@+id/editPW"
+                android:layout_width="200dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="5dp"
+                android:hint="Password"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+            <EditText
+                android:id = "@+id/editName"
+                android:layout_width="240dp"
+                android:layout_height="34dp"
+                android:hint="Name"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+
+            <EditText
+                android:id = "@+id/editBirthday"
+                android:layout_width="240dp"
+                android:layout_height="34dp"
+                android:hint="Birth Day(6자리)"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+            <EditText
+                android:id = "@+id/editPhoneNumber"
+                android:layout_width="240dp"
+                android:layout_height="34dp"
+                android:hint="Phone Number"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+            <EditText
+                android:id = "@+id/editEmail"
+                android:layout_width="240dp"
+                android:layout_height="34dp"
+                android:hint="E-mail address"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_btn"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id = "@+id/IDLayout"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        android:weightSum="2">
 
         <Button
             android:layout_weight="1"
             android:id = "@+id/SignUpButton2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text = "회원가입"
             android:onClick="onButtonSignUpClicked"
-            android:background="#ff7f00"
+            android:background="@color/accent_color"
             android:textColor="#ffffff"/>
 
         <Button
@@ -197,15 +182,12 @@
             android:id = "@+id/cancel_Button"
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text = "취소"
             android:onClick="onButtonCancelClicked"
-            android:textColor="#ff7f00"
+            android:textColor="@color/accent_color"
             android:background="@drawable/my_button_bg"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"/>
+
     </LinearLayout>
 
 

@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-    <LinearLayout
+<LinearLayout
     android:weightSum="10"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/gradient"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    -<LinearLayout
-    android:weightSum="6"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_weight="3" android:id="@+id/line1">
 
-    <Space
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="2"/>
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="3.4" >
 
-    <EditText
-        android:layout_height="40dp"
-        android:layout_width="200dp"
-        android:layout_weight="2"
-        android:id="@+id/editText1"
-        android:layout_gravity="bottom|center"
-        android:hint="아이디를 입력하세요"
-        android:textColor="#000000"
-        android:gravity="center"/>
-
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="회원 인증"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="34dp"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
 
 
-    -<LinearLayout
-    android:weightSum="6"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_weight="4"
-    android:id="@+id/line2">
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="3"
+        android:paddingTop="50dp"
+        android:id="@+id/line2">
 
-    <Space
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="2"/>
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_height="wrap_content"
+            android:layout_width="240dp"
+            android:layout_gravity="center"
+            android:paddingVertical="5dp"
+            android:hint="User ID"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:gravity="center"
+            android:background="@drawable/edit_btn"
+            />
 
-    <EditText
-        android:layout_height="40dp"
-        android:layout_width="200dp"
-        android:layout_weight="2"
-        android:id="@+id/editText2"
-        android:hint="비밀번호를 입력하세ㅐ요"
-        android:textColor="#000000"
-        android:gravity="center"/>
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:paddingVertical="5dp"
+            android:gravity="center"
+            android:hint="password"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_btn"
+            />
 
-</LinearLayout>
+    </LinearLayout>
 
     <!--This Layout is consisted of SignIn and SignUp Buttons-->
 
@@ -66,44 +76,38 @@
     <!--Clicking Signup will show up the SignUp Activity page and make users to set some information and add that information to the DB-->
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:padding="30dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
 
-    -<LinearLayout
-    android:weightSum="10"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_weight="2">
+        <!--sign in 버튼-->
+        <Button
+            android:id="@+id/SigninButton"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="2"
+            android:background="#ffb82b"
+            android:onClick="onButton1Clicked"
+            android:text="로그인"
+            android:textColor="#ffffff" />
 
-    <Space
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="3"/>
+        <!--sign up 버튼-->
+        <Button
+            android:id="@+id/SignUpButton"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="2"
+            android:background="@drawable/my_button_bg"
+            android:onClick="onButton2Clicked"
+            android:text="회원 가입"
+            android:textColor="#ffb82b" />
 
-    <!--sign in 버튼-->
-
-
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="50dp"
-        android:layout_weight="2"
-        android:id="@+id/SigninButton"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#ffffff"
-        android:background="#ff7f00"
-        android:onClick="onButton1Clicked"
-        android:text="로그인"/>
-
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="50dp"
-        android:layout_weight="2"
-        android:id="@+id/SignUpButton"
-        android:textColor="#ff7f00"
-        android:background="@drawable/my_button_bg"
-        android:onClick="onButton2Clicked"
-        android:text="회원 가입"
-        android:layout_marginLeft="16dp"/>
-
-</LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

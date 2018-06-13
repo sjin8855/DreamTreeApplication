@@ -32,11 +32,13 @@ public class Budget extends AppCompatActivity {
     TextView memoText;
     TextView AlarmText;
 
+    TextView RemainingMoney;
+
     BudgetInfo newBudget;
-    List<BudgetInfo> budgetList;
     LinearLayout root;
     TextView t[];
 
+    List<BudgetInfo> budgetList;
     private String ip = "61.255.4.166";//IP
     public static int SERVERPORT = 7777;
 
@@ -54,6 +56,8 @@ public class Budget extends AppCompatActivity {
     String category;
     String memo;
 
+    int totalSpendMoney = 0;
+
     boolean BudgetInfoLoadingDone;
     boolean isInDanger = false;
 
@@ -64,6 +68,8 @@ public class Budget extends AppCompatActivity {
 
         BudgetInfoLoadingDone = false;
         AlarmText = (TextView) findViewById(R.id.AlarmText);
+        RemainingMoney = (TextView) findViewById(R.id.RemainingMoney);
+
 
         myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute();
@@ -172,12 +178,6 @@ public class Budget extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
-
-                for(int i=0;i<budgetList.size();i++)
-                {
-                    System.out.println(budgetList.get(i).getMemo() + " :::::: " + budgetList.size());
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,10 +189,18 @@ public class Budget extends AppCompatActivity {
         {
             try
             {
+                for(int i=0;i<budgetList.size();i++)
+                {
+                    System.out.println(budgetList.get(i).getSpendMoney() + " :::::: " + budgetList.size());
+                    totalSpendMoney += Integer.valueOf(budgetList.get(i).getSpendMoney());
+                }
+
                 if(!BudgetInfoLoadingDone)
                 {
                     printBudgetList();
                 }
+
+                RemainingMoney.setText("잔액: " + String.valueOf(150000-totalSpendMoney) + "원");
 
                 if(isInDanger)
                 {
