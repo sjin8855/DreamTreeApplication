@@ -306,14 +306,10 @@ public class MainActivity extends AppCompatActivity
 
         for(int i=0; i<storeList.size(); i++) {
             if(str.equals("기타")){
-                if(storeList.get(i).get_Sector().equals("기타") || storeList.get(i).get_Sector().equals("레스토랑") ||
-                        storeList.get(i).get_Sector().equals("분식") || storeList.get(i).get_Sector().contains("도시락")
-                        || storeList.get(i).get_Sector().contains("제과") || storeList.get(i).get_Sector().equals("패스트푸드")
-                        || storeList.get(i).get_Sector().equals("떡집") || storeList.get(i).get_Sector().contains("반찬")
-                        || storeList.get(i).get_Sector().equals("샌드위치") || storeList.get(i).get_Sector().contains("휴게")) {
+                if(!storeList.get(i).get_Sector().equals("한식") && !storeList.get(i).get_Sector().equals("중식") && !storeList.get(i).get_Sector().equals("양식"))
                     addList.add(storeList.get(i).get_Name());
-                }
             }
+
             else{
                 if(storeList.get(i).get_Sector().equals(str)) {
                     addList.add(storeList.get(i).get_Name());
@@ -331,7 +327,7 @@ public class MainActivity extends AppCompatActivity
             nr.listener(MainActivity.this)
                     .key("AIzaSyAbiBZdyZZqkXedD7kmhK0VVigzwd2FsYM")
                     .latlng(location.latitude, location.longitude)//서울
-                    .radius(1000) //1000 미터 내에서 검색
+                    .radius(50000) //1000 미터 내에서 검색
                     //.type(PlaceType.RESTAURANT) //음식점
                     .name(addList.get(i))
                     .language("ko", "KR")
