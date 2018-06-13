@@ -25,7 +25,8 @@
             android:id = "@+id/editID"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input ID"
+            android:hint="아이디"
+            android:textColor="#000000"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingLeft="16dp"/>
@@ -48,9 +49,10 @@
         <EditText
             android:layout_weight="3"
             android:id = "@+id/editPW"
+            android:textColor="#000000"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input Password"
+            android:hint="비밀번호"
             android:paddingLeft="16dp"
             android:gravity="center"
             android:layout_gravity="center"/>
@@ -75,7 +77,8 @@
             android:id = "@+id/editName"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input Name"
+            android:hint="이름"
+            android:textColor="#000000"
             android:paddingLeft="16dp"
             android:gravity="center"
             android:layout_gravity="center"/>
@@ -101,7 +104,8 @@
             android:id = "@+id/editBirthday"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input Birthday"
+            android:textColor="#000000"
+            android:hint="생일"
             android:paddingLeft="16dp"
             android:gravity="center"
             android:layout_gravity="center"/>
@@ -127,7 +131,8 @@
             android:id = "@+id/editPhoneNumber"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input Phone Number"
+            android:textColor="#000000"
+            android:hint="핸드폰 번호"
             android:paddingLeft="16dp"
             android:gravity="center"
             android:layout_gravity="center"/>
@@ -153,7 +158,8 @@
             android:id = "@+id/editEmail"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="Input Email"
+            android:textColor="#000000"
+            android:hint="이메일"
             android:paddingLeft="16dp"
             android:gravity="center"
             android:layout_gravity="center"/>
@@ -181,7 +187,7 @@
             android:id = "@+id/SignUpButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "Sign Up"
+            android:text = "회원가입"
             android:onClick="onButtonSignUpClicked"
             android:background="#ff7f00"
             android:textColor="#ffffff"/>
@@ -192,7 +198,7 @@
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "Cancel"
+            android:text = "취소"
             android:onClick="onButtonCancelClicked"
             android:textColor="#ff7f00"
             android:background="@drawable/my_button_bg"/>

@@ -2,23 +2,43 @@ package com.example.user.dreamtreeapp;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class InputBudget extends AppCompatActivity {
 
     TextView txtText;
+
+    private String ip = "61.255.4.166";//IP
+    public static int SERVERPORT = 7777;
+
+    MyAsyncTask myAsyncTask;
+    static DataOutputStream Dout;
+    static DataInputStream Din;
+    Socket mSocket;
 
     Button selectDate;
     DatePickerDialog datePickerDialog;
@@ -32,6 +52,8 @@ public class InputBudget extends AppCompatActivity {
     Button category;
 
     EditText memo;
+
+    boolean writeDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +74,9 @@ public class InputBudget extends AppCompatActivity {
 
     public void mOnClose(View v)
     {
-        Intent intent = new Intent();
-        intent.putExtra("year", String.valueOf(year));
-        intent.putExtra("month", String.valueOf(month));
-        intent.putExtra("day", String.valueOf(dayOfMonth));
-        intent.putExtra("spendMoney", spendMoney.getText().toString());
-        intent.putExtra("category", category.getText());
-        intent.putExtra("memo", memo.getText().toString());
-        setResult(RESULT_OK,intent);
+        MyAsyncTask myAsyncTask = new MyAsyncTask();
+        myAsyncTask.execute();
 
-        finish();
     }
 
     //화면 바깥쪽눌렀을때 닫히는거 막도록
@@ -86,7 +101,7 @@ public class InputBudget extends AppCompatActivity {
             {
                 selectDate.setText(day + "/" + month + "/" + year);
             }
-        }, year, month, dayOfMonth);
+        }, year, month+1, dayOfMonth);
         datePickerDialog.show();
     }
 
@@ -111,6 +126,116 @@ public class InputBudget extends AppCompatActivity {
                 String result = data.getStringExtra("category");
                 category.setText(result);
             }
+        }
+    }
+
+    private class MyAsyncTask extends AsyncTask<Void,Void,Void>
+    {
+        protected void onPreExecute()
+        {
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            try
+            {
+                mSocket = new Socket(ip,SERVERPORT);
+                Dout = new DataOutputStream(mSocket.getOutputStream());
+                Din = new DataInputStream(mSocket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("서버에 연결되었습니다");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            final Sender messageSender = new Sender(); // Initialize chat sender
+            // AsyncTask.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            {
+                messageSender.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            else {
+                messageSender.execute();
+            }
+            Receiver receiver = new Receiver();
+            receiver.execute();
+        }
+    }
+
+    private class Receiver extends AsyncTask<Void,Void,Void>
+    {
+        protected void onPreExecute()
+        {
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            String line;
+            try
+            {
+                line = Din.readUTF();
+                System.out.println(line);
+                if(line.contains("BudgetListUpdated__"))
+                {
+                    writeDone = true;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            if(writeDone)
+            {
+                Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(),Budget.class);
+                finish();
+                startActivityForResult(intent,1);
+
+            }
+        }
+    }
+
+    private class Sender extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            try
+            {
+                Dout.writeUTF("writeBudgetInfo_:"
+                        + "Budget!@LoginedUser:" + Login.loginedUser.get_ID()
+                        + ":Budget!@Category:" + category.getText().toString()
+                        + ":Budget!@Expenditure:" + spendMoney.getText().toString()
+                        + ":Budget!@MEMO:" + memo.getText().toString()
+                        + ":Budget!@SpendDate:" + selectDate.getText().toString());
+
+                System.out.println("writeBudgetInfo_:"
+                        + "Budget!@LoginedUser:" + Login.loginedUser.get_ID()
+                        + ":Budget!@Category:" + category
+                        + ":Budget!@Expenditure:" + spendMoney.getText().toString()
+                        + ":Budget!@MEMO:" + memo.getText().toString()
+                        + ":Budget!@SpendDate:" + year + "/" + month + "/" + dayOfMonth);
+                Dout.flush();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
         }
     }
 }

@@ -9,12 +9,18 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +118,8 @@ public class MainActivity extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
+    ListView listview;
+
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
 
     LocationRequest locationRequest = new LocationRequest()
@@ -206,8 +214,127 @@ public class MainActivity extends AppCompatActivity
                 .type(PlaceType.RESTAURANT) //음식점
                 //.name(N)
                 //.latlng(lat,lon)
+                .language("ko","KR")
                 .build()
                 .execute();
+    }
+
+    public void showPlaceInformationAddress(LatLng location, List<String> select)
+    {
+        //List<String> N = new ArrayList<String>();
+        //N.add("개포동 660 종합상가 B-143");
+        //N.add("개포로 82길 9-11");
+
+        StoreManager sm = new StoreManager();
+        List<Store> storeList =  sm.getStoreinfo();
+        List<String> addList = new ArrayList<String>();
+
+        for(int i=0; i<storeList.size(); i++) {
+            for(int j=0; j<select.size(); j++) {
+                if(storeList.get(i).get_Borough().equals(select.get(j))) {
+                    addList.add(storeList.get(i).get_Address());
+                }
+            }
+        }
+
+        mGoogleMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        NRPlaces.Builder nr = new NRPlaces.Builder();
+        for(int i=0; i<addList.size(); i++) {
+            nr.listener(MainActivity.this)
+                    .key("AIzaSyAbiBZdyZZqkXedD7kmhK0VVigzwd2FsYM")
+                    .latlng(37.56, 126.97)//서울
+                    .radius(1000) //1000 미터 내에서 검색
+                    //.type(PlaceType.RESTAURANT) //음식점
+                    .name(addList.get(i))
+                    .language("ko", "KR")
+                    .build().execute();
+        }
+
+
+    }
+
+    public void showPlaceInformationName(LatLng location)
+    {
+        //List<String> N = new ArrayList<String>();
+        //N.add("본죽");
+        //N.add("원할머니보쌈");
+
+
+        StoreManager sm = new StoreManager();
+        List<Store> storeList =  sm.getStoreinfo();
+        List<String> nameList = new ArrayList<>();
+        EditText name = (EditText)findViewById(R.id.insert_name);
+        String adr = name.getText().toString();
+
+        for(int i=0; i<storeList.size(); i++) {
+            if(storeList.get(i).get_Name().equals(adr)) {
+                nameList.add(storeList.get(i).get_Name());
+            }
+        }
+
+        mGoogleMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        NRPlaces.Builder nr = new NRPlaces.Builder();
+        for(int i=0; i<nameList.size(); i++) {
+            nr.listener(MainActivity.this)
+                    .key("AIzaSyAbiBZdyZZqkXedD7kmhK0VVigzwd2FsYM")
+                    .latlng(location.latitude, location.longitude)//서울
+                    .radius(1000) //1000 미터 내에서 검색
+                    //.type(PlaceType.RESTAURANT) //음식점
+                    .name(nameList.get(i))
+                    .language("ko", "KR")
+                    .build().execute();
+        }
+    }
+
+    public void showPlaceInformationSector(LatLng location, String str)
+    {
+        //List<String> N = new ArrayList<String>();
+        //N.add("개포동 660 종합상가 B-143");
+        //N.add("개포로 82길 9-11");
+
+        StoreManager sm = new StoreManager();
+        List<Store> storeList =  sm.getStoreinfo();
+        List<String> addList = new ArrayList<String>();
+
+        for(int i=0; i<storeList.size(); i++) {
+            if(str.equals("기타")){
+                if(!storeList.get(i).get_Sector().equals("한식") && !storeList.get(i).get_Sector().equals("중식") && !storeList.get(i).get_Sector().equals("양식"))
+                    addList.add(storeList.get(i).get_Name());
+            }
+
+            else{
+                if(storeList.get(i).get_Sector().equals(str)) {
+                    addList.add(storeList.get(i).get_Name());
+                }
+            }
+        }
+
+        mGoogleMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        NRPlaces.Builder nr = new NRPlaces.Builder();
+        for(int i=0; i<addList.size(); i++) {
+            nr.listener(MainActivity.this)
+                    .key("AIzaSyAbiBZdyZZqkXedD7kmhK0VVigzwd2FsYM")
+                    .latlng(location.latitude, location.longitude)//서울
+                    .radius(50000) //1000 미터 내에서 검색
+                    //.type(PlaceType.RESTAURANT) //음식점
+                    .name(addList.get(i))
+                    .language("ko", "KR")
+                    .build().execute();
+        }
+
+
     }
 
     @Override
@@ -224,10 +351,92 @@ public class MainActivity extends AppCompatActivity
         mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
 
         Button button = (Button)findViewById(R.id.button);
+        Button adSearch = (Button)findViewById(R.id.adSearch);
+        Button nameSearch = (Button)findViewById(R.id.nameSearch);
+        listview = (ListView)findViewById(R.id.listview);
+        final RadioGroup rg = (RadioGroup)findViewById(R.id.radioGroup1);
+        Button sectorSearch = (Button)findViewById(R.id.sectorSearch);
+
+        List<String> list = new ArrayList<>(); // //데이터를 저장하게 되는 리스트
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_multiple_choice, list);
+
+        listview.setAdapter(adapter);
+
+        list.add("서대문구");
+
+        list.add("마포구");
+        list.add("양천구");
+        list.add("강서구");
+        list.add("동대문구");
+        list.add("중랑구");
+        list.add("성북구");
+        list.add("강북구");
+        list.add("도봉구");
+        list.add("노원구");
+        list.add("은평구");
+        list.add("구로구");
+        list.add("금천구");
+        list.add("영등포구");
+        list.add("동작구");
+        list.add("관악구");
+        list.add("서초구");
+        list.add("강남구");
+        list.add("송파구");
+        list.add("강동구");
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPlaceInformation(currentPosition);
+            }
+        });
+
+        adSearch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                final List<String> selectedItems = new ArrayList<>();
+
+                //리스트뷰에서 선택된 아이템의 목록을 가져온다.
+                SparseBooleanArray checkedItemPositions = listview.getCheckedItemPositions();
+                for( int i=0; i<checkedItemPositions.size(); i++){
+                    int pos = checkedItemPositions.keyAt(i);
+
+                    if (checkedItemPositions.valueAt(i))
+                    {
+                        selectedItems.add(listview.getItemAtPosition(pos).toString());
+                    }
+                }
+
+                final CharSequence[] items = selectedItems.toArray(new String[selectedItems.size()]);
+                showPlaceInformationAddress(currentPosition, selectedItems);
+            }
+        });
+
+        nameSearch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                showPlaceInformationName(currentPosition);
+            }
+        });
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView,
+                                    View view, int position, long id) {
+                //클릭한 아이템의 문자열을 가져옴
+                String selected_item = (String)adapterView.getItemAtPosition(position);
+            }
+        });
+
+        sectorSearch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                int id = rg.getCheckedRadioButtonId();
+                //getCheckedRadioButtonId() 의 리턴값은 선택된 RadioButton 의 id 값.
+                RadioButton rb = (RadioButton) findViewById(id);
+                String str = rb.getText().toString();
+                showPlaceInformationSector(currentPosition, str);
             }
         });
 
@@ -304,17 +513,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void moveCamera(LatLng latlng, float zoom, String title){
-       Log.d(TAG, "moveCamera: moving the camero to : lat: " + latlng.latitude + ", lng: "+ latlng.longitude);
-       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+        Log.d(TAG, "moveCamera: moving the camero to : lat: " + latlng.latitude + ", lng: "+ latlng.longitude);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
 
-       if(!title.equals("My Location")) {
-           MarkerOptions options = new MarkerOptions()
-                   .position(latlng)
-                   .title(title);
-           mGoogleMap.addMarker(options);
-       }
+        if(!title.equals("My Location")) {
+            MarkerOptions options = new MarkerOptions()
+                    .position(latlng)
+                    .title(title);
+            mGoogleMap.addMarker(options);
+        }
 
-       hideSoftKeyboard();
+        hideSoftKeyboard();
     }
 
     @Override

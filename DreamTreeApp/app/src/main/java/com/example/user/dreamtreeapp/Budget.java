@@ -1,8 +1,10 @@
 package com.example.user.dreamtreeapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,6 +13,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,10 +30,11 @@ public class Budget extends AppCompatActivity {
     TextView Foodtext;
     TextView SpendMoneytext;
     TextView memoText;
+    TextView AlarmText;
 
     BudgetInfo newBudget;
     List<BudgetInfo> budgetList;
-    static LinearLayout root;
+    LinearLayout root;
     TextView t[];
 
     private String ip = "61.255.4.166";//IP
@@ -50,6 +55,7 @@ public class Budget extends AppCompatActivity {
     String memo;
 
     boolean BudgetInfoLoadingDone;
+    boolean isInDanger = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +63,11 @@ public class Budget extends AppCompatActivity {
         setContentView(R.layout.activity_budget);
 
         BudgetInfoLoadingDone = false;
+        AlarmText = (TextView) findViewById(R.id.AlarmText);
 
         myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute();
 
-        DateText = (TextView) findViewById(R.id.DateText);
-        Foodtext = (TextView) findViewById(R.id.Foodtext);
-        SpendMoneytext = (TextView) findViewById(R.id.SpendMoneytext);
-        memoText = (TextView) findViewById(R.id.memoText);
     }
 
     public void onInputBudgetButtonClicked(View v)
@@ -151,6 +154,18 @@ public class Budget extends AppCompatActivity {
                     budgetList  = new ArrayList<BudgetInfo>();
                     Oin = new ObjectInputStream(mSocket.getInputStream());
                     budgetList = (ArrayList<BudgetInfo>) Oin.readObject();
+
+                    line = Oin.readUTF();
+                    if(line.contains("ThisChildIsInDanger!@!@"))
+                    {
+                        System.out.println("ThisChildIsInDanger!@!@!!!!!!!!!!!!!!!");
+                        isInDanger = true;
+                    }
+                    else
+                    {
+                        System.out.println("NoDanger!@!@!!!!!!!!!!!!!!!");
+                        isInDanger = false;
+                    }
                     Oin.close();
                 }
                 catch (ClassNotFoundException e)
@@ -160,7 +175,7 @@ public class Budget extends AppCompatActivity {
 
                 for(int i=0;i<budgetList.size();i++)
                 {
-                    System.out.println(budgetList.get(i).getMemo());
+                    System.out.println(budgetList.get(i).getMemo() + " :::::: " + budgetList.size());
                 }
 
             } catch (IOException e) {
@@ -172,24 +187,24 @@ public class Budget extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid)
         {
-
             try
             {
                 if(!BudgetInfoLoadingDone)
                 {
-                    root = (LinearLayout) findViewById(R.id.rl);
-                    t = new TextView[100];
-                    LinearLayout.LayoutParams dim = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                    for(int i=0;i<budgetList.size();i++)
-                    {
-                        t[i] = new TextView(getApplicationContext());
-                        t[i].setText(budgetList.get(i).getMemo());
-                        t[i].setTextSize(20);
-                        t[i].setGravity(Gravity.CENTER);
-                        t[i].setPadding(16, 16, 16, 16);
-                        root.addView(t[i]);
-                    }
+                    printBudgetList();
                 }
+
+                if(isInDanger)
+                {
+                    AlarmText.setText("편의점 말고 다른곳도 가세요!");
+                    AlarmText.setTextColor(Color.rgb(0,0,0));
+                }
+                else
+                {
+                    AlarmText.setText("오늘도 좋은 하루 보내세요!");
+                    AlarmText.setTextColor(Color.rgb(0,0,0));
+                }
+
                 mSocket.close();
                 System.out.println("Socket closed");
 
@@ -224,6 +239,26 @@ public class Budget extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(Void result) {
+        }
+    }
+
+    public void printBudgetList()
+    {
+        root = (LinearLayout) findViewById(R.id.rl);
+        root.setVerticalGravity(Gravity.BOTTOM);
+        t = new TextView[100];
+        LinearLayout.LayoutParams dim = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        for(int i=0;i<budgetList.size();i++)
+        {
+            t[i] = new TextView(getApplicationContext());
+            t[i].setLayoutParams(dim);
+            t[i].setText(budgetList.get(i).getDate() + "에 " + budgetList.get(i).getCategory() + "를 " + budgetList.get(i).getSpendMoney() +"원을 내고 먹었습니다"
+                    + "\n" + "메모: " + budgetList.get(i).getMemo());
+            t[i].setTextSize(15);
+            t[i].setTextColor(Color.BLACK);
+            t[i].setGravity(Gravity.CENTER);
+            t[i].setPadding(16, 16, 16, 16);
+            root.addView(t[i]);
         }
     }
 }
