@@ -8,4 +8,6 @@
 
 ## 4. Run Application
 
-## 5. The server will be open from 2018-06-14 ~ 2018-06-25
+## 5. The server will be open during 2018-06-14 ~ 2018-06-25
+
+## 6. The map function is not available due to your sha1 code not registered
